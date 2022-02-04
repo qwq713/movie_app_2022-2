@@ -9,7 +9,10 @@ node {
     remote.user = 'xadmmjh'
     remote.password = 'temp123$'
     remote.allowAnyHosts = true
-    
+
+    def remoteDirectory = '/ext001/movie-app-2022/'
+    def startUpShellFile = 'startup.sh'
+
     stage('Setting'){
         sh "echo ${githubUrl}"
     }
@@ -30,8 +33,6 @@ node {
 
     stage('Deploy-CopyBuildFile'){
         sh "echo '========== <Remote Copy from Jenkins Server To Remote DeployServer Build =========='"
-        def remoteDirectory = '/ext001/movie-app-2022/'
-        def startUpShellFile = 'startup.sh'
         sshPut remote: remote, from: 'build', into: "${remoteDirectory}"
         sshPut remote: remote, from: 'startup.sh', into: "${remoteDirectory}"
         sshCommand remote: remote, command: "chmod +x ${remoteDirectory}${startUpShellFile}"
@@ -40,7 +41,7 @@ node {
 
     stage('Deploy-StartServer'){
         sh "echo '========== <Start React Server =========='"
-        sshScript remote:remote, script: "/ext001/movie-app-2022/startup.sh"
+        sshScript remote:remote, script: "${remoteDirectory}${startUpShellFile}"
         sh "echo '========== >Start React Server Complete=========='"
     }
 }
