@@ -11,6 +11,7 @@ node {
     remote.allowAnyHosts = true
 
     def remoteDirectory = '/ext001/movie-app-2022/'
+    def remoteBuildDirectory = 'build'
     def startUpShellFile = 'startup.sh'
 
     stage('Setting'){
@@ -33,21 +34,19 @@ node {
 
     stage('Deploy-CopyBuildFile'){
         sh "echo '========== <Remote Copy from Jenkins Server To Remote DeployServer Build =========='"
-        sshPut remote: remote, from: 'build', into: "${remoteDirectory}"
-        sshPut remote: remote, from: 'startup.sh', into: "${remoteDirectory}"
+
+        sshRemove remote: remote, path: "${remoteDirectory}${remoteBuildDirectory}"
+        sshRemove remote: remote, path: "${remoteDirectory}${startUpShellFile}"
+
+        sshPut remote: remote, from: "${remoteBuildDirectory}", into: "${remoteDirectory}"
+        sshPut remote: remote, from: "${startUpShellFile}", into: "${remoteDirectory}"
         sshCommand remote: remote, command: "chmod +x ${remoteDirectory}${startUpShellFile}"
         sh "echo '========== >Remote Copy Complete =========='"
     }
 
     stage('Deploy-StartServer'){
         sh "echo '========== <Start React Server =========='"
-        sshCommand remote:remote, command: "${remoteDirectory}${startUpShellFile}" 
-        // "${remoteDirectory}${startUpShellFile}" -> '/ext001/movie-app-2022/startup.sh'
-        // #!/bin/bash
-        // cd /ext001/movie-app-2022/
-        // nohup npx serve -s ./build &
-        
-        
+        sshCommand remote:remote, command: "${remoteDirectory}${startUpShellFile} > /dev/null 2>&1" 
         sh "echo '========== >Start React Server Complete=========='"
     }
 }
