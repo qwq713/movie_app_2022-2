@@ -45,8 +45,9 @@ node {
     }
 
     stage('Deploy-StartServer'){
+        def logfileName = 'reactLogs2022'
         sh "echo '========== <Start React Server =========='"
-        sshCommand remote:remote, command: "${remoteDirectory}${startUpShellFile} > /dev/null 2>&1" 
+        sshCommand remote:remote, command: "${remoteDirectory}${startUpShellFile} >> ${remoteDirectory}${logfileName} 2>&1" 
         sh "echo '========== >Start React Server Complete=========='"
     }
 }
