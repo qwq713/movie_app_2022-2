@@ -41,7 +41,7 @@ node {
 
     stage('Deploy-StartServer'){
         sh "echo '========== <Start React Server =========='"
-        sshScript remote:remote, script: "${remoteDirectory}${startUpShellFile}"
+        sshCommand remote:remote, command: "${remoteDirectory}${startUpShellFile}"
         sh "echo '========== >Start React Server Complete=========='"
     }
 }
