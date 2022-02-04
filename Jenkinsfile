@@ -41,9 +41,13 @@ node {
         sshRemove remote: remote, path: "${remoteDirectory}${stopShellFile}"
 
         sshPut remote: remote, from: "${remoteBuildDirectory}", into: "${remoteDirectory}"
+
         sshPut remote: remote, from: "${startUpShellFile}", into: "${remoteDirectory}"
         sshPut remote: remote, from: "${stopShellFile}", into: "${remoteDirectory}"
+        
         sshCommand remote: remote, command: "chmod +x ${remoteDirectory}${startUpShellFile}"
+        sshCommand remote: remote, command: "chmod +x ${remoteDirectory}${stopShellFile}"
+        
         sh "echo '========== >Remote Copy Complete =========='"
     }
 
