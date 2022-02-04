@@ -32,11 +32,13 @@ node {
         sh "echo '========== <Remote Copy from Jenkins Server To Remote DeployServer Build =========='"
         sshPut remote: remote, from: 'build', into: '/ext001/movie-app-2022'
         sshPut remote: remote, from: 'startup.sh', into: '/ext001/movie-app-2022'
+        sshCommand remote: remote, command: "chmod +x /ext001/movie-app-2022/startup.sh"
         sh "echo '========== >Remote Copy Complete =========='"
     }
 
     stage('Deploy-StartServer'){
         sh "echo '========== <Start React Server =========='"
+
         sshScript remote:remote, script: "/ext001/movie-app-2022/startup.sh"
         sh "echo '========== >Start React Server Complete=========='"
     }
