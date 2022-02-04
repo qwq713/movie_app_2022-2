@@ -41,8 +41,13 @@ node {
 
     stage('Deploy-StartServer'){
         sh "echo '========== <Start React Server =========='"
-        sshCommand remote:remote, command: "pwd"
-        sshCommand remote:remote, command: "${remoteDirectory}${startUpShellFile}"
+        sshCommand remote:remote, command: "${remoteDirectory}${startUpShellFile}" 
+        // "${remoteDirectory}${startUpShellFile}" -> '/ext001/movie-app-2022/startup.sh'
+        // #!/bin/bash
+        // cd /ext001/movie-app-2022/
+        // nohup npx serve -s ./build &
+        
+        
         sh "echo '========== >Start React Server Complete=========='"
     }
 }
