@@ -55,7 +55,7 @@ node {
         def logfileName = 'reactLogs2022'
 
         sh "echo '========== <Stop previous React Server =========='"
-        sshCommand remote:remote, command: "${remoteDirectory}${stopShellFile} >> ${remoteDirectory}${logfileName} 2>&1" 
+        sshCommand remote:remote, command: "${remoteDirectory}${stopShellFile}" 
         sh "echo '========== >Stop previous React Server Complete=========='"
 
         sh "echo '========== <Start React Server =========='"
