@@ -45,7 +45,7 @@ node {
 
     stage('Deploy'){
         def logfileName = 'reactLogs2022'
-        
+
         sh "echo '=========================================='"
         sh "echo '=========================================='"
         sh "echo '<<<<< Deploy Start ======================='"
@@ -73,7 +73,7 @@ node {
         sshPut remote: remote, from: "${stopShellFile}", into: "${remoteDirectory}"
         sshCommand remote: remote, command: "chmod +x ${remoteDirectory}${stopShellFile}"
 
-        sh "echo '(REMOTE) execute stop.sh ================='"
+        sh "echo '(REMOTE) execute start.sh ================='"
         sshCommand remote:remote, command: "${remoteDirectory}${startUpShellFile}" 
 
         sh "echo '>>>>> Deploy Complete ===================='"
