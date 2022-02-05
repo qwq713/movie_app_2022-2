@@ -19,47 +19,66 @@ node {
         sh "echo ${githubUrl}"
     }
     stage('Checkout') {
-        sh "echo '========== <CheckOut Start =========='"
+
+        sh "echo '=========================================='"
+        sh "echo '=========================================='"
+        sh "echo '<<<<< CheckOut Start ====================='"
         git branch: "${gitBranch}", url: "${githubUrl}"
-        sh "echo '========== >CheckOut Complete========== '"
+        sh "echo '>>>>> CheckOut Complete==================='"
+        sh "echo '=========================================='"
+        sh "echo '=========================================='"
     }
 
     stage('Build') {
-        sh "echo '========== Build NPM =========='"
-        sh "echo '========== <NPM Version =========='"
+        sh "echo '=========================================='"
+        sh "echo '=========================================='"
+        sh "echo '<<<<< Build NPM =========================='"
+        sh "echo 'NPM Version Check ========================'"
         sh "npm -v"
-        sh "echo '========== >NPM Build =========='"
+        sh "echo 'NPM Build ================================'"
         sh "npm install"
         sh "npm run build"
+        sh "echo '>>>>> Build NPM Complete ================='"
+        sh "echo '=========================================='"
+        sh "echo '=========================================='"
     }
 
-    stage('Deploy-CopyBuildFile'){
-        sh "echo '========== <Remote Copy from Jenkins Server To Remote DeployServer Build =========='"
+    stage('Deploy'){
+        def logfileName = 'reactLogs2022'
+        
+        sh "echo '=========================================='"
+        sh "echo '=========================================='"
+        sh "echo '<<<<< Deploy Start ======================='"
 
+        sh "echo '(REMOTE) execute stop.sh ================='"
+        sshCommand remote:remote, command: "${remoteDirectory}${stopShellFile}" 
+
+        sh "echo '(REMOTE) remove ${remoteDirectory}${remoteBuildDirectory} ================='"
         sshRemove remote: remote, path: "${remoteDirectory}${remoteBuildDirectory}"
+        
+        sh "echo '(REMOTE) remove ${remoteDirectory}${startUpShellFile} ================='"
         sshRemove remote: remote, path: "${remoteDirectory}${startUpShellFile}"
+        
+        sh "echo '(REMOTE) remove ${remoteDirectory}${stopShellFile} ================='"
         sshRemove remote: remote, path: "${remoteDirectory}${stopShellFile}"
 
+        sh "echo '(REMOTE) put from ${remoteBuildDirectory} into ${remoteDirectory} ================='"
         sshPut remote: remote, from: "${remoteBuildDirectory}", into: "${remoteDirectory}"
 
+        sh "echo '(REMOTE) put from ${startUpShellFile} into ${remoteDirectory} ================='"
         sshPut remote: remote, from: "${startUpShellFile}", into: "${remoteDirectory}"
-        sshPut remote: remote, from: "${stopShellFile}", into: "${remoteDirectory}"
-        
         sshCommand remote: remote, command: "chmod +x ${remoteDirectory}${startUpShellFile}"
+
+        sh "echo '(REMOTE) put from ${stopShellFile} into ${remoteDirectory} ================='"
+        sshPut remote: remote, from: "${stopShellFile}", into: "${remoteDirectory}"
         sshCommand remote: remote, command: "chmod +x ${remoteDirectory}${stopShellFile}"
+
+        sh "echo '(REMOTE) execute stop.sh ================='"
+        sshCommand remote:remote, command: "${remoteDirectory}${startUpShellFile}" 
+
+        sh "echo '>>>>> Deploy Complete ===================='"
+        sh "echo '=========================================='"
+        sh "echo '=========================================='"
         
-        sh "echo '========== >Remote Copy Complete =========='"
-    }
-
-    stage('Deploy-StartServer'){
-        def logfileName = 'reactLogs2022'
-
-        sh "echo '========== <Stop previous React Server =========='"
-        sshCommand remote:remote, command: "${remoteDirectory}${stopShellFile}" 
-        sh "echo '========== >Stop previous React Server Complete=========='"
-
-        sh "echo '========== <Start React Server =========='"
-        sshCommand remote:remote, command: "${remoteDirectory}${startUpShellFile} >> ${remoteDirectory}${logfileName} 2>&1" 
-        sh "echo '========== >Start React Server Complete=========='"
     }
 }
