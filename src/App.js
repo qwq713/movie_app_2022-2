@@ -14,7 +14,6 @@ class App extends React.Component {
     const {
       data: {
         data: { movies },
-        status: status,
       },
     } = await axios.get(
       "https://yts.mx/api/v2/list_movies.json?sort_by=rating"
@@ -22,7 +21,6 @@ class App extends React.Component {
 
     // const movies = await axios.get("https://yts.mx/api/v2/list_movies.json");
     console.log(movies);
-    console.log(status);
     this.setState({ movies: movies, isLoading: false });
   };
 
