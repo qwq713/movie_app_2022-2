@@ -29,7 +29,7 @@ node {
         sh "echo '========== <NPM Version =========='"
         sh "npm -v"
         sh "echo '========== >NPM Build =========='"
-        // sh "npm install" ,,, skip...
+        sh "npm install"
         sh "npm run build"
     }
 
