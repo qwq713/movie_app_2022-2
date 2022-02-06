@@ -1,9 +1,9 @@
 import React from "react";
 import Home from './routes/Home'
-import "./App.css";
+import "./About.css";
 
 
-function App(){
+function About(){
   return <Home />;
 }
 
