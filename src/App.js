@@ -1,10 +1,21 @@
 import React from "react";
-import Home from './routes/Home'
+import { HashRouter, Route } from "react-router-dom";
 import "./App.css";
+import Navigation from "./components/Navigation";
+import Home from "./routes/Home";
+import About from "./routes/About";
+import Detail from "./routes/Detail"
 
 
-function App(){
-  return <Home />;
+function App() {
+  return (
+    <HashRouter>
+      <Navigation />
+      <Route path="/" exact={true} component={Home} />
+      <Route path="/about" exact={true} component={About} />
+      <Route path="/movie-detail" exact={true} component={Detail} />
+    </HashRouter>
+  );
 }
 
 export default App;
